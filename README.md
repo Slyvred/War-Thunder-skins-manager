@@ -1,6 +1,9 @@
 # War-Thunder-skins-manager
 This repository contains a simple CLI tool I wrote to quickly install/uninstall a War Thunder camo 
 
+## Requirements
+- Have chrome installed (the scrapper uses chrome headless to retrieve the skin)
+
 ## Features
 - Install a camo
 - Uninstall a camo
