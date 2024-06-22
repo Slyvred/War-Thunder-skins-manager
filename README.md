@@ -1,6 +1,9 @@
 # War-Thunder-skins-manager
 This repository contains a simple CLI tool I wrote to quickly install/uninstall a War Thunder camo 
 
+## Requirements
+- Have chrome installed (the scrapper uses chrome headless to retrieve the skin)
+
 ## Features
 - Install a camo
 - Uninstall a camo
@@ -13,7 +16,8 @@ This repository contains a simple CLI tool I wrote to quickly install/uninstall 
 4. Build the cli with `cargo build --release`
 5. Run the cli with `./target/release/wt-skins-manager.exe` or `cargo run --release`
 6. Follow the instructions
-7. Enjoy your new camo
+7. In War Thunder, apply the skin from the customization menu
+8. Enjoy your new camo
 
 ## How to get the camo link*
 1. Go to [live.warthunder.com](https://live.warthunder.com/feed/camouflages/)
