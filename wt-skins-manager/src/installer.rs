@@ -38,11 +38,18 @@ pub async fn install_camouflage(camouflage: &Camouflage) -> Result<String, Strin
         return Ok("Installation cancelled.".to_string());
     }
 
+    let mut camo_name = "camouflage.zip".to_string();
+    let choice = get_user_input(
+        "How would you like to name the camouflage folder (leave empty for default):",
+    );
+    if !choice.is_empty() {
+        camo_name = format!("{}.zip", choice);
+    }
+
     // Télécharger le fichier
     println!("Downloading the camouflage...");
-    let path = "camouflage.zip";
 
-    match download_file(&camouflage.download, path).await {
+    match download_file(&camouflage.download, camo_name.as_str()).await {
         Ok(_) => println!("Camouflage downloaded successfully."),
         Err(e) => {
             println!("{}", e);
@@ -68,7 +75,7 @@ pub async fn install_camouflage(camouflage: &Camouflage) -> Result<String, Strin
     }
 
     println!("Extracting the archive...");
-    let file = match fs::File::open("camouflage.zip") {
+    let file = match fs::File::open(camo_name.as_str()) {
         Ok(file) => file,
         Err(_) => {
             return Err("Failed to open the archive".to_string());
@@ -82,10 +89,9 @@ pub async fn install_camouflage(camouflage: &Camouflage) -> Result<String, Strin
         }
     };
 
-    // Si l'archive contient plusieurs fichiers, créer un dossier pour les contenir
-    if archive.len() != 1 {
-        let folder_name = format!("{}_{}", camouflage.author, chrono::Local::now().timestamp());
-        path.push_str(&format!("/{}", folder_name));
+    if camo_name != "camouflage.zip" {
+        let tmp = format!("/{}", &camo_name.replace(".zip", ""));
+        path.push_str(&tmp);
     }
 
     match archive.extract(&path) {
@@ -96,7 +102,7 @@ pub async fn install_camouflage(camouflage: &Camouflage) -> Result<String, Strin
     }
 
     // Supprimer le fichier zip
-    match fs::remove_file("camouflage.zip") {
+    match fs::remove_file(&camo_name) {
         Ok(_) => (),
         Err(_) => {
             eprintln!("Failed to delete the archive, please delete it manually.");
