@@ -1,21 +1,10 @@
-use std::env::var;
+// use chrono;
 use std::fs;
-use std::io::{Write};
+use std::io::Write;
 use std::path::Path;
-use chrono;
 
+use crate::helpers::get_user_input;
 use crate::scrapper::Camouflage;
-
-pub fn get_user_input(prompt: &str) -> String {
-    println!("{}", prompt);
-    let mut choice = String::new();
-    std::io::stdin()
-        .read_line(&mut choice)
-        .expect("Error reading input");
-    let choice = choice.trim().to_lowercase();
-
-    choice
-}
 
 pub async fn download_file(url: &str, path: &str) -> Result<String, String> {
     let response = reqwest::get(url)
@@ -24,7 +13,10 @@ pub async fn download_file(url: &str, path: &str) -> Result<String, String> {
 
     if response.status().is_success() {
         let mut file = fs::File::create(path).expect("Failed to create file");
-        let content = response.bytes().await.expect("Failed to read response content");
+        let content = response
+            .bytes()
+            .await
+            .expect("Failed to read response content");
         file.write_all(&content).expect("Failed to write to file");
         Ok(path.to_string())
     } else {
@@ -58,15 +50,12 @@ pub async fn install_camouflage(camouflage: &Camouflage) -> Result<String, Strin
         }
     }
 
-    // Décompresser le fichier puis le déplacer dans le dossier des camouflages
-    let username = match var("USERNAME") {
-        Ok(username) => username,
+    let mut path = match fs::read_to_string("game_directory.txt") {
+        Ok(path) => path,
         Err(_) => {
-            return Err("Failed to get username".to_string());
+            return Err("Error reading the game directory".to_string());
         }
     };
-
-    let mut path = format!("C:/Users/{}/AppData/Local/WarThunder/UserSkins", username);
 
     println!("Installing the camouflage...");
     if !Path::new(&path).exists() {

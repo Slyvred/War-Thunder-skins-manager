@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use std::sync::Arc;
+// use std::sync::Arc;
 
 use headless_chrome::{Browser, LaunchOptions};
 use scraper::{Html, Selector};
@@ -44,7 +44,9 @@ pub fn get_camo_url() -> String {
 
     // Si l'url n'a pas la structure suivante: https://live.warthunder.com/post/<numéros>/en/, on recommence
     if !url.starts_with("https://live.warthunder.com/post/") || !url.ends_with("/en/") {
-        println!("The URL should follow this structure: https://live.warthunder.com/post/<numbers>/en/");
+        println!(
+            "The URL should follow this structure: https://live.warthunder.com/post/<numbers>/en/"
+        );
         return get_camo_url();
     }
 
@@ -52,14 +54,14 @@ pub fn get_camo_url() -> String {
 }
 
 pub struct Scrapper {
-    browser: Browser,
-    tab: Arc<headless_chrome::Tab>,
+    // browser: Browser,
+    // tab: Arc<headless_chrome::Tab>,
     document: Html,
     camouflage_selector: Selector,
     nickname_selector: Selector,
     date_selector: Selector,
     image_selector: Selector,
-    multiple_image_selector: Selector,
+    // multiple_image_selector: Selector,
     download_selector: Selector,
 }
 
@@ -71,7 +73,7 @@ impl Scrapper {
                 .build()
                 .unwrap(),
         )
-            .unwrap();
+        .unwrap();
         let tab = browser.new_tab().unwrap();
         tab.navigate_to(url).unwrap();
         tab.wait_until_navigated().unwrap();
@@ -82,24 +84,29 @@ impl Scrapper {
         let nickname_selector = Selector::parse("a.nickname").unwrap();
         let date_selector = Selector::parse("a.date").unwrap();
         let image_selector = Selector::parse("div.image img").unwrap();
-        let multiple_image_selector = Selector::parse("div.multiple_images.two_lines img").unwrap();
+        // let multiple_image_selector = Selector::parse("div.multiple_images.two_lines img").unwrap();
         let download_selector = Selector::parse("a.downloads.button_item").unwrap();
 
         Self {
-            browser,
-            tab,
+            // browser,
+            // tab,
             document,
             camouflage_selector,
             nickname_selector,
             date_selector,
             image_selector,
-            multiple_image_selector,
+            // multiple_image_selector,
             download_selector,
         }
     }
 
     pub fn get_camouflage(&mut self) -> Option<Camouflage> {
-        let mut camouflage = Camouflage::new("".to_string(), "".to_string(), "".to_string(), "".to_string());
+        let mut camouflage = Camouflage::new(
+            "".to_string(),
+            "".to_string(),
+            "".to_string(),
+            "".to_string(),
+        );
 
         for camo in self.document.select(&self.camouflage_selector) {
             camouflage.author = camo

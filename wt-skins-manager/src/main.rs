@@ -1,19 +1,28 @@
+use std::fs;
 use std::process::exit;
 
-use crate::scrapper::*;
+use crate::helpers::*;
 use crate::installer::*;
+use crate::scrapper::*;
 use crate::uninstaller::*;
-mod scrapper;
+
+mod helpers;
 mod installer;
+mod scrapper;
 mod uninstaller;
 
 #[tokio::main]
 async fn main() {
+    let path = fs::read_to_string("game_directory.txt");
+    if path.is_err() {
+        println!("Please set the game directory first.");
+        set_game_directory();
+    }
 
-    let mut choice = get_user_input("What would you like to do?\n\t1: Install a camouflage\n\t2: Uninstall a camouflage\n\t3: Quit");
-    while choice != "1" && choice != "2" && choice != "3" {
-        println!("Please enter 1, 2, or 3.");
-        choice = get_user_input("What would you like to do?\n\t1: Install a camouflage\n\t2: Uninstall a camouflage\n\t3: Quit");
+    let mut choice = get_user_input("What would you like to do?\n\t1: Install a camouflage\n\t2: Uninstall a camouflage\n\t3: Set game directory\n\t4: Quit");
+    while !["1", "2", "3", "4"].contains(&choice.as_str()) {
+        println!("Please enter a number in the 1 to 4 range.");
+        choice = get_user_input("What would you like to do?\n\t1: Install a camouflage\n\t2: Uninstall a camouflage\n\t3: Set game directory\n\t4: Quit");
     }
 
     match choice.as_str() {
@@ -37,6 +46,9 @@ async fn main() {
             uninstall_camo();
         }
         "3" => {
+            set_game_directory();
+        }
+        "4" => {
             exit(0);
         }
         _ => {
