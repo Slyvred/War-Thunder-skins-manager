@@ -18,7 +18,10 @@ async fn main() {
         println!("Please set the game directory first.");
         set_game_directory();
     }
+    main_menu().await;
+}
 
+async fn main_menu() {
     let mut choice = get_user_input("What would you like to do?\n\t1: Install a camouflage\n\t2: Uninstall a camouflage\n\t3: Set game directory\n\t4: Quit");
     while !["1", "2", "3", "4"].contains(&choice.as_str()) {
         println!("Please enter a number in the 1 to 4 range.");
@@ -41,12 +44,15 @@ async fn main() {
                 Ok(msg) => println!("{}", msg),
                 Err(e) => println!("{}", e),
             }
+            get_user_input("Press any key to exit...");
         }
         "2" => {
             uninstall_camo();
+            get_user_input("Press any key to exit...");
         }
         "3" => {
             set_game_directory();
+            Box::pin(main_menu()).await;
         }
         "4" => {
             exit(0);
