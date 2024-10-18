@@ -1,1 +1,1 @@
-c:/users/remi/appdata/local/warthunder/userskins
+/home/slyvred/Documents/WarThunder/UserSkins

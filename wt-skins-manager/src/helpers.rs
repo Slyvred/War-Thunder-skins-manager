@@ -7,7 +7,7 @@ pub fn get_user_input(prompt: &str) -> String {
     std::io::stdin()
         .read_line(&mut choice)
         .expect("Error reading input");
-    let choice = choice.trim().to_lowercase();
+    let choice = choice.trim().to_string();//.to_lowercase();
 
     choice
 }
@@ -18,8 +18,8 @@ pub fn set_game_directory() {
     path = path.replace('\\', "/");
     path = path.trim_end_matches('/').to_string();
 
-    if !path.contains("userskins") {
-        path = format!("{}/userskins", path);
+    if !path.contains("UserSkins") {
+        path = format!("{}/UserSkins", path);
     }
 
     let mut file = fs::File::create("game_directory.txt").expect("Failed to create file");
